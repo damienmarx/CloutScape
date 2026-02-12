@@ -1,0 +1,68 @@
+# Environment variables
+.env
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# Virtual environments
+venv/
+ENV/
+env/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Logs
+*.log
+logs/
+bot.log
+web.log
+
+# Data files
+*.json
+!requirements.json
+!package.json
+!starter-content.json
+
+# RSPS builds
+rsps/releases/*.jar
+rsps/releases/lib/
+rsps/releases/data/
+rsps/server/build/
+rsps/client/build/
+
+# Cloudflare
+.cloudflared/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Temporary files
+*.tmp
+*.bak
+*.swp

@@ -1,0 +1,18 @@
+[Unit]
+Description=CloutScape Web Dashboard
+After=network.target
+
+[Service]
+Type=simple
+User=%USER%
+WorkingDirectory=%INSTALL_DIR%
+Environment="FLASK_APP=app_enhanced.py"
+Environment="FLASK_ENV=production"
+ExecStart=/usr/bin/python3 app_enhanced.py
+Restart=on-failure
+RestartSec=10
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=multi-user.target

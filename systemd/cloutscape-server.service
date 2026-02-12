@@ -1,0 +1,16 @@
+[Unit]
+Description=CloutScape RSPS Server
+After=network.target
+
+[Service]
+Type=simple
+User=%USER%
+WorkingDirectory=%INSTALL_DIR%/rsps/releases
+ExecStart=/usr/bin/java -Xmx1G -Xms512M -jar server.jar
+Restart=on-failure
+RestartSec=10
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=multi-user.target

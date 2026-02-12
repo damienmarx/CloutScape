@@ -1,0 +1,21 @@
+[Unit]
+Description=CloutScape Discord Bot
+After=network.target
+
+[Service]
+Type=simple
+User=%USER%
+WorkingDirectory=%INSTALL_DIR%
+Environment="DISCORD_TOKEN=%DISCORD_TOKEN%"
+Environment="ADMIN_ID=%ADMIN_ID%"
+Environment="RSPS_HOST=localhost"
+Environment="RSPS_PORT=43594"
+Environment="CLOUDFLARE_DOMAIN=%CLOUDFLARE_DOMAIN%"
+ExecStart=/usr/bin/python3 bot_enhanced_v2.py
+Restart=on-failure
+RestartSec=10
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=multi-user.target
