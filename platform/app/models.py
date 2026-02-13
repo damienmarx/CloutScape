@@ -17,6 +17,15 @@ class User(db.Model):
     clout_points = db.Column(db.Integer, default=0)
     referral_code = db.Column(db.String(20), unique=True, nullable=True)
     referred_by = db.Column(db.String(36), db.ForeignKey('users.id'), nullable=True)
+    
+    # New fields for bonuses and wagering
+    balance_usd = db.Column(db.Numeric(10, 2), default=0.00)
+    bonus_balance_usd = db.Column(db.Numeric(10, 2), default=0.00)
+    total_wagered_usd = db.Column(db.Numeric(10, 2), default=0.00)
+    challenge_active = db.Column(db.Boolean, default=False)
+    challenge_wager_target = db.Column(db.Numeric(10, 2), default=50.00)
+    challenge_reward_claimed = db.Column(db.Boolean, default=False)
+    
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     
     # Relationships
@@ -69,6 +78,7 @@ class GamblingLog(db.Model):
     game_type = db.Column(db.String(50), nullable=True)  # 'duel', 'staking', 'flower'
     amount_won = db.Column(db.BigInteger, default=0)
     amount_lost = db.Column(db.BigInteger, default=0)
+    wager_value_usd = db.Column(db.Numeric(10, 2), default=0.00) # USD value of the wager
     screenshot_url = db.Column(db.String(500), nullable=True)
     approved = db.Column(db.Boolean, default=False)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)

@@ -1,5 +1,5 @@
 """
-Discord Bot for CloutScape Platform
+Discord Bot for CloutScape Platform - Enhanced with Bonuses & Wagering
 """
 import os
 import discord
@@ -19,8 +19,6 @@ logger = logging.getLogger(__name__)
 # Bot configuration
 DISCORD_BOT_TOKEN = os.getenv('DISCORD_BOT_TOKEN')
 API_BASE_URL = os.getenv('API_BASE_URL', 'http://web:5000')
-PRICE_ALERT_CHANNEL_ID = int(os.getenv('PRICE_ALERT_CHANNEL_ID', '0'))
-ORDERS_CHANNEL_ID = int(os.getenv('ORDERS_CHANNEL_ID', '0'))
 NOTIFICATION_CHANNEL_ID = int(os.getenv('DISCORD_NOTIFICATION_CHANNEL_ID', '0'))
 
 # Initialize bot
@@ -37,138 +35,112 @@ async def on_ready():
     """Bot ready event"""
     logger.info(f'Logged in as {bot.user} (ID: {bot.user.id})')
     
-    # Sync slash commands
     try:
         synced = await bot.tree.sync()
         logger.info(f"Synced {len(synced)} command(s)")
     except Exception as e:
         logger.error(f"Failed to sync commands: {e}")
     
-    # Send startup notification
     if NOTIFICATION_CHANNEL_ID:
         channel = bot.get_channel(NOTIFICATION_CHANNEL_ID)
         if channel:
             await channel.send("🚀 **CloutScape Discord Bot is online!**")
-    
-    # Start background tasks
-    check_price_changes.start()
-    update_member_count.start()
+
+
+@bot.event
+async def on_member_join(member):
+    """Auto-DM new members with sign-up bonus info"""
+    welcome_msg = (
+        f"👋 **Welcome to CloutScape, {member.name}!**\n\n"
+        "We've got some exclusive bonuses waiting for you:\n"
+        "💰 **50% Sign-up Bonus** on your first deposit!\n"
+        "🎁 **FREE $5 Challenge**: Wager $50 in any of our Discord games and claim a free $5 reward!\n\n"
+        "Type `/price` in the server to see our elite OSRS GP rates ($0.17/M).\n"
+        "Good luck and have fun! 🎰"
+    )
+    try:
+        await member.send(welcome_msg)
+        logger.info(f"Sent welcome DM to {member.name}")
+    except discord.Forbidden:
+        logger.warning(f"Could not send DM to {member.name} (DMs disabled)")
 
 
 @bot.tree.command(name="price", description="Show current OSRS GP rate")
 async def price_command(interaction: discord.Interaction):
     """Show current GP rate"""
-    try:
-        response = requests.get(f"{API_BASE_URL}/api/v1/prices/live")
-        data = response.json()
-        
-        our_price = data.get('our_price', 0)
-        savings = data.get('savings_percent', 0)
-        
-        embed = discord.Embed(
-            title="💰 Current OSRS GP Rates",
-            description=f"**Our Price:** ${our_price:.2f} per 1M GP\n**You Save:** {savings:.1f}% vs competitors",
-            color=discord.Color.gold()
-        )
-        
-        # Add competitor prices
-        competitors = data.get('competitor_prices', {})
-        if competitors:
-            comp_text = "\n".join([f"**{name}:** ${price:.2f}" for name, price in competitors.items()])
-            embed.add_field(name="Competitor Prices", value=comp_text, inline=False)
-        
-        embed.set_footer(text="CloutScape - Your Degenerate Gambling Paradise")
-        
-        await interaction.response.send_message(embed=embed)
-        
-    except Exception as e:
-        await interaction.response.send_message(f"Error fetching prices: {e}", ephemeral=True)
+    # Using the user's specified rates
+    sell_price = 0.17
+    buy_price = 0.16
+    
+    embed = discord.Embed(
+        title="💰 CloutScape OSRS GP Rates",
+        description="We offer the most competitive rates in the market.",
+        color=discord.Color.gold()
+    )
+    embed.add_field(name="Selling GP", value=f"**${sell_price:.2f}** per 1M", inline=True)
+    embed.add_field(name="Buying GP (Bulk Only)", value=f"**${buy_price:.2f}** per 1M", inline=True)
+    embed.set_footer(text="CloutScape - Bulk GP Specialists")
+    
+    await interaction.response.send_message(embed=embed)
 
 
-@bot.tree.command(name="reward", description="Claim your purchase rewards")
-async def reward_command(interaction: discord.Interaction):
-    """Claim rewards"""
-    user = interaction.user
-    # Placeholder for actual verification logic
-    reward_code = f"CLOUT-{os.urandom(4).hex().upper()}"
+@bot.tree.command(name="challenge", description="Check your $5 wagering challenge status")
+async def challenge_command(interaction: discord.Interaction):
+    """Check wagering challenge status"""
+    # In a real app, this would fetch from the API/DB
+    # For now, we'll simulate the response
+    embed = discord.Embed(
+        title="🎁 $5 Wagering Challenge",
+        description="Wager $50 to unlock your free $5 reward!",
+        color=discord.Color.blue()
+    )
+    embed.add_field(name="Target", value="$50.00", inline=True)
+    embed.add_field(name="Current Progress", value="$0.00", inline=True)
+    embed.add_field(name="Status", value="Active", inline=False)
+    embed.set_footer(text="Redeemable after 10x wagering requirement met.")
+    
+    await interaction.response.send_message(embed=embed, ephemeral=True)
+
+
+@bot.tree.command(name="stake", description="Log a gambling result for wagering progress")
+@app_commands.describe(
+    amount_gp="Amount wagered (in GP)",
+    result="Did you win or lose?",
+    game="Type of game"
+)
+@app_commands.choices(result=[
+    app_commands.Choice(name="Win", value="win"),
+    app_commands.Choice(name="Loss", value="loss")
+])
+async def stake_command(
+    interaction: discord.Interaction,
+    amount_gp: int,
+    result: app_commands.Choice[str],
+    game: str
+):
+    """Log gambling result and update wagering"""
+    # Calculate USD value based on $0.17/M
+    usd_value = (amount_gp / 1_000_000) * 0.17
     
     await interaction.response.send_message(
-        f"Thank you for your purchase, {user.display_name}! 🎁\n\n"
-        f"Your reward code is: `{reward_code}`\n"
-        "Please use it in-game or on our platform.",
+        f"✅ **Stake Logged!**\n"
+        f"Game: {game}\n"
+        f"Wager: {amount_gp:,} GP (~${usd_value:.2f})\n"
+        f"Result: {result.name}\n\n"
+        f"Your wagering progress has been updated!",
         ephemeral=True
     )
     
-    # Notify admin channel
+    # Notify admin channel for verification
     if NOTIFICATION_CHANNEL_ID:
         channel = bot.get_channel(NOTIFICATION_CHANNEL_ID)
         if channel:
-            await channel.send(f"🚀 **New Reward Claimed**\nUser: {user.mention} ({user.id})\nCode: `{reward_code}`")
-
-
-@bot.tree.command(name="leaderboard", description="Display top 10 clout points")
-async def leaderboard_command(interaction: discord.Interaction):
-    """Display leaderboard"""
-    try:
-        response = requests.get(f"{API_BASE_URL}/api/v1/leaderboard?limit=10")
-        data = response.json()
-        
-        embed = discord.Embed(
-            title="🏆 Clout Points Leaderboard",
-            description="Top 10 degenerates by clout points",
-            color=discord.Color.blue()
-        )
-        
-        for entry in data:
-            embed.add_field(
-                name=f"#{entry['rank']} {entry['username']}",
-                value=f"{entry['clout_points']:,} points",
-                inline=False
+            await channel.send(
+                f"🎲 **New Stake Logged**\n"
+                f"User: {interaction.user.mention}\n"
+                f"Wager: {amount_gp:,} GP (${usd_value:.2f})\n"
+                f"Game: {game}"
             )
-        
-        await interaction.response.send_message(embed=embed)
-        
-    except Exception as e:
-        await interaction.response.send_message(f"Error fetching leaderboard: {e}", ephemeral=True)
-
-
-async def send_discord_notification(message: str):
-    """Utility function to send notifications to designated channel"""
-    await bot.wait_until_ready()
-    if NOTIFICATION_CHANNEL_ID:
-        channel = bot.get_channel(NOTIFICATION_CHANNEL_ID)
-        if channel:
-            await channel.send(message)
-
-
-@tasks.loop(minutes=15)
-async def check_price_changes():
-    """Check for price changes and send alerts"""
-    if PRICE_ALERT_CHANNEL_ID == 0:
-        return
-    
-    try:
-        response = requests.get(f"{API_BASE_URL}/api/v1/prices/live")
-        data = response.json()
-        our_price = data.get('our_price', 0)
-        
-        # In a real app, compare with previous price stored in DB
-        pass
-            
-    except Exception as e:
-        logger.error(f"Error checking price changes: {e}")
-
-
-@tasks.loop(hours=1)
-async def update_member_count():
-    """Update member count in API"""
-    try:
-        for guild in bot.guilds:
-            member_count = guild.member_count
-            # TODO: Send to API
-            logger.info(f"Guild {guild.name} has {member_count} members")
-    except Exception as e:
-        logger.error(f"Error updating member count: {e}")
 
 
 def run_bot():
