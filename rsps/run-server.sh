@@ -33,6 +33,13 @@ if [ -d "$LIB_DIR" ]; then
         fi
     done
 fi
+if [ -d "$LIB_DIR/netty" ]; then
+    for jar in "$LIB_DIR/netty"/*.jar; do
+        if [ -f "$jar" ]; then
+            CLASSPATH="$CLASSPATH:$jar"
+        fi
+    done
+fi
 
 # Change to releases directory
 cd "$RELEASES_DIR"
@@ -46,7 +53,7 @@ echo "=========================================="
 echo ""
 
 # Run server
-java $JAVA_OPTS -cp "$CLASSPATH" com.elvarg.Server
+java $JAVA_OPTS -cp "$CLASSPATH" com.elvarg.Elvarg
 
 # If server crashes, show error
 if [ $? -ne 0 ]; then

@@ -95,6 +95,10 @@ if [ -d "$LIB_DIR" ]; then
     echo "Copying library dependencies..."
     mkdir -p "$OUTPUT_DIR/lib"
     cp "$LIB_DIR"/*.jar "$OUTPUT_DIR/lib/" 2>/dev/null || true
+    if [ -d "$LIB_DIR/netty" ]; then
+        mkdir -p "$OUTPUT_DIR/lib/netty"
+        cp "$LIB_DIR/netty"/*.jar "$OUTPUT_DIR/lib/netty/" 2>/dev/null || true
+    fi
 fi
 
 # Copy data

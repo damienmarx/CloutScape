@@ -21,7 +21,7 @@ logger = logging.getLogger(__name__)
 class RSPSIntegration:
     """Manages RSPS server integration with Discord"""
     
-    def __init__(self, server_host: str = "localhost", server_port: int = 43594):
+    def __init__(self, server_host: str = "localhost", server_port: int = 43595):
         self.server_host = server_host
         self.server_port = server_port
         self.accounts_file = 'player_accounts.json'
@@ -287,11 +287,17 @@ class RSPSIntegration:
     
     def get_server_status(self) -> Dict:
         """Get RSPS server status"""
-        # TODO: Implement actual server status check
+        online = False
+        try:
+            with socket.create_connection((self.server_host, self.server_port), timeout=2):
+                online = True
+        except:
+            online = False
+            
         return {
-            'online': True,
-            'players_online': 0,
-            'uptime': '0h 0m',
+            'online': online,
+            'players_online': 0, # This would need a more complex packet to get from the server
+            'uptime': 'N/A',
             'version': '317',
             'max_players': 100
         }

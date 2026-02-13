@@ -74,7 +74,7 @@ trap cleanup SIGINT SIGTERM
 
 # Start the bot
 echo -e "${BLUE}→ Starting Discord bot...${NC}"
-python3 bot.py > logs/bot.log 2>&1 &
+python3 bot_enhanced_v2.py > logs/bot.log 2>&1 &
 BOT_PID=$!
 echo -e "${GREEN}✓ Bot started (PID: $BOT_PID)${NC}"
 
@@ -83,7 +83,7 @@ sleep 2
 
 # Start the web app
 echo -e "${BLUE}→ Starting Flask web app...${NC}"
-python3 app.py > logs/app.log 2>&1 &
+python3 app_enhanced.py > logs/app.log 2>&1 &
 APP_PID=$!
 echo -e "${GREEN}✓ Web app started (PID: $APP_PID)${NC}\n"
 
