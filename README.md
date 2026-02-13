@@ -78,6 +78,7 @@ We recommend deploying the Pro Platform using the included automated tools:
 - **Architecture**: See [ARCHITECTURE.md](ARCHITECTURE.md)
 - **Deployment**: See [DEPLOYMENT.md](DEPLOYMENT.md)
 - **Pro Setup**: See [QUICKSTART_PRO.md](QUICKSTART_PRO.md)
+- **WSL2/Kali Guide**: See [WSL2_KALI_GUIDE.md](WSL2_KALI_GUIDE.md)
 
 ## 🤝 Support
 - **Issues**: [GitHub Issues](https://github.com/No6love9/CloutScape/issues)
