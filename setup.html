@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Setup - CloutScape AIO Discord Bot</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            color: #e2e8f0;
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            font-size: 32px;
+            margin-bottom: 30px;
+            text-align: center;
+            background: linear-gradient(135deg, #3b82f6 0%, #60a5fa 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .setup-card {
+            background: rgba(30, 41, 59, 0.5);
+            border: 1px solid rgba(148, 163, 184, 0.1);
+            border-radius: 8px;
+            padding: 40px;
+            backdrop-filter: blur(10px);
+            margin-bottom: 30px;
+        }
+
+        .step {
+            margin-bottom: 30px;
+        }
+
+        .step-number {
+            display: inline-block;
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, #3b82f6 0%, #1e40af 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .step-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: #f1f5f9;
+        }
+
+        .step-desc {
+            color: #94a3b8;
+            margin-bottom: 15px;
+            line-height: 1.6;
+        }
+
+        .code-block {
+            background: rgba(15, 23, 42, 0.8);
+            border: 1px solid rgba(148, 163, 184, 0.1);
+            border-radius: 6px;
+            padding: 15px;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            overflow-x: auto;
+            margin: 15px 0;
+            color: #60a5fa;
+        }
+
+        .copy-btn {
+            background: #3b82f6;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+            margin-top: 10px;
+            transition: all 0.2s;
+        }
+
+        .copy-btn:hover {
+            background: #1e40af;
+        }
+
+        .info-box {
+            background: rgba(59, 130, 246, 0.1);
+            border-left: 4px solid #3b82f6;
+            padding: 15px;
+            border-radius: 4px;
+            margin: 20px 0;
+            color: #93c5fd;
+        }
+
+        .warning-box {
+            background: rgba(245, 158, 11, 0.1);
+            border-left: 4px solid #f59e0b;
+            padding: 15px;
+            border-radius: 4px;
+            margin: 20px 0;
+            color: #fcd34d;
+        }
+
+        button, a.button {
+            padding: 12px 30px;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.2s;
+            display: inline-block;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #3b82f6 0%, #1e40af 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(59, 130, 246, 0.3);
+        }
+
+        .requirements {
+            list-style: none;
+            margin: 15px 0;
+        }
+
+        .requirements li {
+            padding: 8px 0;
+            padding-left: 25px;
+            position: relative;
+        }
+
+        .requirements li:before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: #10b981;
+            font-weight: bold;
+        }
+
+        .divider {
+            border-top: 1px solid rgba(148, 163, 184, 0.1);
+            margin: 30px 0;
+        }
+
+        footer {
+            text-align: center;
+            color: #64748b;
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(148, 163, 184, 0.1);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🚀 Setup Guide</h1>
+
+        <div class="setup-card">
+            <div class="step">
+                <div class="step-number">1</div>
+                <div class="step-title">Create Discord Bot</div>
+                <div class="step-desc">
+                    Go to the <a href="https://discord.com/developers/applications" target="_blank" style="color: #3b82f6;">Discord Developer Portal</a> and create a new application.
+                </div>
+                <ul class="requirements">
+                    <li>Click "New Application"</li>
+                    <li>Give it a name (e.g., "CloutScape Setup Bot")</li>
+                    <li>Go to "Bot" section</li>
+                    <li>Click "Add Bot"</li>
+                </ul>
+            </div>
+
+            <div class="step">
+                <div class="step-number">2</div>
+                <div class="step-title">Get Bot Token</div>
+                <div class="step-desc">
+                    Copy your bot token from the Developer Portal.
+                </div>
+                <ul class="requirements">
+                    <li>In Bot section, click "Copy" under TOKEN</li>
+                    <li>Save this token securely</li>
+                    <li>Never share this token publicly!</li>
+                </ul>
+                <div class="warning-box">
+                    ⚠️ Keep your bot token secret! Anyone with this token can control your bot.
+                </div>
+            </div>
+
+            <div class="step">
+                <div class="step-number">3</div>
+                <div class="step-title">Configure Bot Permissions</div>
+                <div class="step-desc">
+                    Set up the required permissions for your bot.
+                </div>
+                <ul class="requirements">
+                    <li>Go to "OAuth2" → "URL Generator"</li>
+                    <li>Select scopes: "bot"</li>
+                    <li>Select permissions: "Administrator"</li>
+                    <li>Copy the generated URL</li>
+                </ul>
+            </div>
+
+            <div class="step">
+                <div class="step-number">4</div>
+                <div class="step-title">Invite Bot to Server</div>
+                <div class="step-desc">
+                    Use the generated URL to invite your bot to your Discord server.
+                </div>
+                <div class="info-box">
+                    💡 You must be a server administrator to invite the bot.
+                </div>
+                <a href="{{ bot_invite_url }}" target="_blank" class="button btn-primary">Invite Bot to Server</a>
+            </div>
+
+            <div class="divider"></div>
+
+            <div class="step">
+                <div class="step-number">5</div>
+                <div class="step-title">Get Your Admin ID</div>
+                <div class="step-desc">
+                    Find your Discord user ID.
+                </div>
+                <ul class="requirements">
+                    <li>Enable Developer Mode in Discord (User Settings → Advanced → Developer Mode)</li>
+                    <li>Right-click your username and select "Copy User ID"</li>
+                    <li>Save this ID</li>
+                </ul>
+            </div>
+
+            <div class="step">
+                <div class="step-number">6</div>
+                <div class="step-title">Configure Environment</div>
+                <div class="step-desc">
+                    Set up the bot with your credentials.
+                </div>
+                <div class="code-block">
+DISCORD_TOKEN=your_bot_token_here
+ADMIN_ID=your_user_id_here
+                </div>
+                <div class="info-box">
+                    💡 Create a .env file in the bot directory with these values.
+                </div>
+            </div>
+
+            <div class="step">
+                <div class="step-number">7</div>
+                <div class="step-title">Start the Bot</div>
+                <div class="step-desc">
+                    Run the bot and web app.
+                </div>
+                <div class="code-block">
+# Install dependencies
+pip install -r requirements.txt
+
+# Start the bot (in one terminal)
+python3 bot.py
+
+# Start the web app (in another terminal)
+python3 app.py
+                </div>
+            </div>
+
+            <div class="step">
+                <div class="step-number">8</div>
+                <div class="step-title">Run Setup Command</div>
+                <div class="step-desc">
+                    In your Discord server, run the setup command.
+                </div>
+                <div class="code-block">
+!setup
+                </div>
+                <div class="info-box">
+                    💡 The bot will create all channels, roles, and permissions automatically.
+                </div>
+            </div>
+
+            <div class="divider"></div>
+
+            <div class="step">
+                <div class="step-title">✅ Setup Complete!</div>
+                <div class="step-desc">
+                    Your Discord server is now configured for CloutScape AIO.
+                </div>
+                <ul class="requirements">
+                    <li>10 channels created</li>
+                    <li>5 roles created</li>
+                    <li>Permissions configured</li>
+                    <li>Ready to use!</li>
+                </ul>
+                <div class="info-box">
+                    📊 Access the web dashboard at http://localhost:5000 to manage your bot.
+                </div>
+            </div>
+        </div>
+
+        <footer>
+            <p>Need help? Check the documentation or contact support.</p>
+        </footer>
+    </div>
+</body>
+</html>

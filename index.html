@@ -3,357 +3,450 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CloutScape | Master Gambling Hub & RSPS</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <title>CloutScape | The Elite Gambling Hub</title>
+    <script src="https://cdn.tailwindcss.com"></script>
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&family=Space+Grotesk:wght@300;500;700&display=swap');
+        
         :root {
             --primary: #3b82f6;
-            --primary-hover: #2563eb;
-            --secondary: #1e293b;
             --accent: #f59e0b;
-            --bg-dark: #0f172a;
-            --bg-card: rgba(30, 41, 59, 0.7);
-            --text-main: #e2e8f0;
-            --text-dim: #94a3b8;
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
+            --danger: #ef4444;
+            --bg: #05070a;
+            --card-bg: rgba(13, 17, 23, 0.8);
         }
 
         body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: radial-gradient(circle at top right, #1e1b4b, #0f172a);
-            color: var(--text-main);
-            min-height: 100vh;
-            line-height: 1.6;
+            font-family: 'Inter', sans-serif;
+            background: var(--bg);
+            color: #e2e8f0;
             overflow-x: hidden;
         }
 
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 20px;
+        .font-heading { font-family: 'Space Grotesk', sans-serif; }
+
+        .glass {
+            background: var(--card-bg);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.03);
         }
 
-        header {
-            background: rgba(15, 23, 42, 0.8);
-            backdrop-filter: blur(12px);
-            border-bottom: 1px solid rgba(148, 163, 184, 0.1);
-            padding: 15px 0;
-            position: sticky;
-            top: 0;
-            z-index: 1000;
+        .neon-border {
+            box-shadow: 0 0 15px rgba(59, 130, 246, 0.2);
+            border: 1px solid rgba(59, 130, 246, 0.3);
         }
 
-        .nav-content {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+        .game-card {
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
 
-        .logo {
-            font-size: 26px;
-            font-weight: 800;
-            color: var(--primary);
-            text-decoration: none;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            letter-spacing: -0.5px;
-        }
-
-        .nav-links {
-            display: flex;
-            gap: 25px;
-        }
-
-        .nav-links a {
-            color: var(--text-main);
-            text-decoration: none;
-            font-weight: 500;
-            font-size: 15px;
-            transition: color 0.2s;
-        }
-
-        .nav-links a:hover {
-            color: var(--primary);
-        }
-
-        .hero {
-            padding: 100px 0 60px;
-            text-align: center;
-        }
-
-        .hero h1 {
-            font-size: 64px;
-            font-weight: 900;
-            margin-bottom: 20px;
-            background: linear-gradient(to right, #60a5fa, #3b82f6, #2563eb);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            letter-spacing: -2px;
-        }
-
-        .hero p {
-            font-size: 20px;
-            color: var(--text-dim);
-            max-width: 700px;
-            margin: 0 auto 40px;
-        }
-
-        .cta-group {
-            display: flex;
-            justify-content: center;
-            gap: 20px;
-        }
-
-        .btn {
-            padding: 14px 32px;
-            border-radius: 8px;
-            font-weight: 600;
-            text-decoration: none;
-            transition: all 0.2s;
-            display: inline-flex;
-            align-items: center;
-            gap: 10px;
-            cursor: pointer;
-        }
-
-        .btn-primary {
-            background: var(--primary);
-            color: white;
-            box-shadow: 0 4px 15px rgba(59, 130, 246, 0.4);
-        }
-
-        .btn-primary:hover {
-            background: var(--primary-hover);
-            transform: translateY(-2px);
-        }
-
-        .btn-discord {
-            background: #5865F2;
-            color: white;
-            box-shadow: 0 4px 15px rgba(88, 101, 242, 0.4);
-        }
-
-        .btn-discord:hover {
-            background: #4752c4;
-            transform: translateY(-2px);
-        }
-
-        .section-title {
-            text-align: center;
-            font-size: 32px;
-            margin-bottom: 50px;
-            font-weight: 700;
-        }
-
-        .features-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 30px;
-            margin-bottom: 80px;
-        }
-
-        .card {
-            background: var(--bg-card);
-            border: 1px solid rgba(148, 163, 184, 0.1);
-            padding: 35px;
-            border-radius: 12px;
-            transition: border-color 0.3s;
-            backdrop-filter: blur(8px);
-        }
-
-        .card:hover {
+        .game-card:hover {
+            transform: scale(1.01) translateY(-2px);
             border-color: var(--primary);
         }
 
-        .card i {
-            font-size: 32px;
-            color: var(--primary);
-            margin-bottom: 20px;
+        .chat-box {
+            height: calc(100vh - 250px);
         }
 
-        .card h3 {
-            font-size: 22px;
-            margin-bottom: 12px;
-            color: white;
+        @keyframes pulse-glow {
+            0% { box-shadow: 0 0 5px rgba(59, 130, 246, 0.2); }
+            50% { box-shadow: 0 0 20px rgba(59, 130, 246, 0.4); }
+            100% { box-shadow: 0 0 5px rgba(59, 130, 246, 0.2); }
         }
 
-        .card p {
-            color: var(--text-dim);
-            font-size: 15px;
-        }
+        .animate-glow { animation: pulse-glow 3s infinite; }
 
-        .gambling-hub {
-            background: rgba(30, 41, 59, 0.3);
-            border-radius: 20px;
-            padding: 60px 40px;
-            margin-bottom: 80px;
-            border: 1px solid rgba(245, 158, 11, 0.2);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .gambling-hub::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            right: -10%;
-            width: 300px;
-            height: 300px;
-            background: var(--accent);
-            filter: blur(150px);
-            opacity: 0.1;
-        }
-
-        .hub-content {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 50px;
-            align-items: center;
-        }
-
-        .game-list {
-            list-style: none;
-        }
-
-        .game-item {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            margin-bottom: 20px;
-            background: rgba(15, 23, 42, 0.5);
-            padding: 15px;
-            border-radius: 10px;
-            border: 1px solid rgba(148, 163, 184, 0.05);
-        }
-
-        .game-item i {
-            color: var(--accent);
-            font-size: 20px;
-        }
-
-        footer {
-            padding: 60px 0 30px;
-            border-top: 1px solid rgba(148, 163, 184, 0.1);
-            text-align: center;
-            color: var(--text-dim);
-        }
-
-        .footer-links {
-            display: flex;
-            justify-content: center;
-            gap: 30px;
-            margin-bottom: 20px;
-        }
-
-        .footer-links a {
-            color: var(--text-dim);
-            text-decoration: none;
-        }
-
-        @media (max-width: 768px) {
-            .hero h1 { font-size: 40px; }
-            .hub-content { grid-template-columns: 1fr; }
-            .cta-group { flex-direction: column; }
-            .nav-links { display: none; }
-        }
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #1e293b; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: #334155; }
     </style>
 </head>
-<body>
-    <header>
-        <div class="container nav-content">
-            <a href="#" class="logo">
-                <i class="fas fa-bolt"></i> CloutScape
-            </a>
-            <nav class="nav-links">
-                <a href="#games">Games</a>
-                <a href="#download">Download</a>
-                <a href="#discord">Community</a>
-                <a href="/docs">Wiki</a>
-            </nav>
+<body class="min-h-screen flex flex-col">
+    <!-- Top Navigation -->
+    <header class="sticky top-0 z-50 glass border-b border-white/5 py-3">
+        <div class="max-w-[1800px] mx-auto px-6 flex justify-between items-center">
+            <div class="flex items-center gap-8">
+                <div class="text-2xl font-black tracking-tighter text-blue-500 flex items-center gap-2 font-heading">
+                    <span class="bg-blue-600 text-white px-2 py-0.5 rounded italic">CS</span>
+                    CLOUTSCAPE
+                </div>
+                <nav class="hidden lg:flex gap-6 text-xs font-bold uppercase tracking-widest text-slate-500">
+                    <a href="#" class="hover:text-white transition">Casino</a>
+                    <a href="#" class="hover:text-white transition">Sports</a>
+                    <a href="#" class="hover:text-white transition">RSPS Sync</a>
+                    <a href="#" class="hover:text-white transition">Provably Fair</a>
+                </nav>
+            </div>
+            
+            <div class="flex items-center gap-6">
+                <div class="hidden sm:flex items-center gap-3 bg-black/40 px-4 py-2 rounded-full border border-white/5">
+                    <span class="text-yellow-500 font-bold">$</span>
+                    <span id="global-balance" class="font-mono font-bold text-white">0.00</span>
+                </div>
+                <div id="auth-buttons" class="flex gap-2">
+                    <button onclick="toggleModal('auth-modal')" class="text-slate-400 hover:text-white text-sm font-bold px-4">Login</button>
+                    <button onclick="toggleModal('auth-modal')" class="bg-blue-600 hover:bg-blue-500 px-6 py-2 rounded-lg font-black text-sm transition-all animate-glow">
+                        REGISTER
+                    </button>
+                </div>
+                <div id="user-profile" class="hidden flex items-center gap-4">
+                    <span id="display-username" class="text-sm font-bold text-slate-300"></span>
+                    <button onclick="location.href='/api/auth/logout'" class="text-xs text-slate-500 hover:text-red-400 font-bold uppercase">Logout</button>
+                </div>
+            </div>
         </div>
     </header>
 
-    <main class="container">
-        <section class="hero">
-            <h1>Master Gambling Hub</h1>
-            <p>The ultimate RSPS-integrated gambling ecosystem. High stakes, provably fair, and fully integrated with Discord.</p>
-            <div class="cta-group">
-                <a href="https://github.com/no6love9/CloutScape/raw/main/releases/CloutScape-Client.zip" class="btn btn-primary" id="download">
-                    <i class="fas fa-download"></i> Download Client
-                </a>
-                <a href="https://discord.gg/cloutscape" class="btn btn-discord">
-                    <i class="fab fa-discord"></i> Join Discord
-                </a>
+    <div class="flex flex-grow max-w-[1800px] mx-auto w-full px-4 py-6 gap-6">
+        <!-- Left Sidebar: Chat -->
+        <aside class="hidden xl:flex flex-col w-80 glass rounded-3xl border border-white/5 overflow-hidden h-[calc(100vh-120px)] sticky top-[80px]">
+            <div class="p-4 border-b border-white/5 bg-white/5 flex justify-between items-center">
+                <h3 class="font-black text-sm uppercase tracking-widest">Global Chat</h3>
+                <span class="text-[10px] bg-green-500/20 text-green-400 px-2 py-0.5 rounded-full font-bold">LIVE</span>
             </div>
-        </section>
+            <div id="chat-messages" class="flex-grow p-4 overflow-y-auto space-y-4 chat-box">
+                <!-- Messages load here -->
+            </div>
+            <div class="p-4 bg-black/20 border-t border-white/5">
+                <div class="relative">
+                    <input id="chat-input" type="text" placeholder="Say something..." class="w-full bg-white/5 border border-white/10 rounded-xl py-3 px-4 text-sm focus:outline-none focus:border-blue-500 transition">
+                    <button id="chat-send" class="absolute right-2 top-2 bg-blue-600 p-1.5 rounded-lg hover:bg-blue-500 transition">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" /></svg>
+                    </button>
+                </div>
+            </div>
+        </aside>
 
-        <section id="games" class="gambling-hub">
-            <div class="hub-content">
-                <div>
-                    <h2 style="font-size: 36px; margin-bottom: 20px;">The Hub Experience</h2>
-                    <p style="color: var(--text-dim); margin-bottom: 30px;">
-                        CloutScape isn't just a server—it's a complete ecosystem. Our gambling modules are built for speed, security, and fairness.
+        <!-- Main Content -->
+        <main class="flex-grow space-y-6">
+            <!-- Navigation Tabs -->
+            <div class="glass rounded-3xl p-2 flex gap-2 border border-white/5">
+                <button onclick="switchTab('games')" id="btn-games" class="flex-grow py-3 rounded-2xl font-bold text-sm transition bg-blue-600 text-white">GAMES</button>
+                <button onclick="switchTab('deposit')" id="btn-deposit" class="flex-grow py-3 rounded-2xl font-bold text-sm transition hover:bg-white/5">DEPOSIT</button>
+                <button onclick="switchTab('withdraw')" id="btn-withdraw" class="flex-grow py-3 rounded-2xl font-bold text-sm transition hover:bg-white/5">WITHDRAW</button>
+                <button onclick="switchTab('syndicate')" id="btn-syndicate" class="flex-grow py-3 rounded-2xl font-bold text-sm transition hover:bg-white/5">SYNDICATE</button>
+                <button onclick="switchTab('fairness')" id="btn-fairness" class="flex-grow py-3 rounded-2xl font-bold text-sm transition hover:bg-white/5">FAIRNESS</button>
+            </div>
+
+            <!-- Games Grid -->
+            <div id="tab-games" class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <div id="slots-container" class="game-card"></div>
+                <div id="keno-container" class="game-card"></div>
+                <div id="crash-container" class="game-card"></div>
+                <div id="dice-container" class="game-card"></div>
+            </div>
+
+            <!-- Deposit Tab -->
+            <div id="tab-deposit" class="hidden glass rounded-3xl p-8 border border-white/5">
+                <h2 class="text-3xl font-black mb-6 font-heading">DEPOSIT FUNDS</h2>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+                    <div class="p-6 bg-white/5 rounded-2xl border border-blue-500/50 hover:border-blue-500 cursor-pointer transition">
+                        <div class="text-2xl mb-2">⚔️</div>
+                        <div class="font-bold">RSPS Gold</div>
+                        <div class="text-xs text-slate-500">Instant Sync</div>
+                    </div>
+                    <div class="p-6 bg-white/5 rounded-2xl border border-white/10 hover:border-blue-500 cursor-pointer transition opacity-50">
+                        <div class="text-2xl mb-2">₿</div>
+                        <div class="font-bold">Crypto</div>
+                        <div class="text-xs text-slate-500">Coming Soon</div>
+                    </div>
+                    <div class="p-6 bg-white/5 rounded-2xl border border-white/10 hover:border-blue-500 cursor-pointer transition opacity-50">
+                        <div class="text-2xl mb-2">💳</div>
+                        <div class="font-bold">Card</div>
+                        <div class="text-xs text-slate-500">Coming Soon</div>
+                    </div>
+                </div>
+                <div class="max-w-md">
+                    <label class="block text-xs font-bold text-slate-500 uppercase mb-2">Amount to Deposit (GP)</label>
+                    <div class="flex gap-2">
+                        <input id="deposit-amount" type="number" placeholder="1000000" class="flex-grow bg-black/40 border border-white/10 rounded-xl py-4 px-6 text-xl font-mono focus:outline-none focus:border-blue-500">
+                        <button onclick="handleDeposit()" class="bg-blue-600 px-8 rounded-xl font-black hover:bg-blue-500 transition">DEPOSIT</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Withdraw Tab -->
+            <div id="tab-withdraw" class="hidden glass rounded-3xl p-8 border border-white/5">
+                <h2 class="text-3xl font-black mb-6 font-heading">WITHDRAW FUNDS</h2>
+                <div class="max-w-md">
+                    <label class="block text-xs font-bold text-slate-500 uppercase mb-2">Amount to Withdraw (GP)</label>
+                    <div class="flex gap-2">
+                        <input id="withdraw-amount" type="number" placeholder="1000000" class="flex-grow bg-black/40 border border-white/10 rounded-xl py-4 px-6 text-xl font-mono focus:outline-none focus:border-blue-500">
+                        <button onclick="handleWithdraw()" class="bg-red-600 px-8 rounded-xl font-black hover:bg-red-500 transition">WITHDRAW</button>
+                    </div>
+                    <p class="mt-4 text-xs text-slate-500 italic">Withdrawals are instantly sent to your in-game RSPS collection box.</p>
+                </div>
+            </div>
+
+            <!-- Syndicate Tab -->
+            <div id="tab-syndicate" class="hidden glass rounded-3xl p-8 border border-white/5">
+                <div class="flex justify-between items-start mb-8">
+                    <div>
+                        <h2 class="text-3xl font-black mb-2 font-heading">THE SYNDICATE</h2>
+                        <p class="text-slate-500">Build your empire and earn passive GP.</p>
+                    </div>
+                    <div class="bg-blue-600/20 border border-blue-500/50 px-6 py-3 rounded-2xl">
+                        <div class="text-[10px] font-bold text-blue-400 uppercase">Your Tier</div>
+                        <div id="syn-tier" class="text-xl font-black text-white">RECRUIT</div>
+                    </div>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                    <div class="bg-white/5 p-6 rounded-2xl border border-white/5">
+                        <div class="text-xs font-bold text-slate-500 uppercase mb-1">Total Referrals</div>
+                        <div id="syn-count" class="text-2xl font-black text-white">0</div>
+                    </div>
+                    <div class="bg-white/5 p-6 rounded-2xl border border-white/5">
+                        <div class="text-xs font-bold text-slate-500 uppercase mb-1">Referred Wager</div>
+                        <div id="syn-trw" class="text-2xl font-black text-white">0 GP</div>
+                    </div>
+                    <div class="bg-white/5 p-6 rounded-2xl border border-white/5">
+                        <div class="text-xs font-bold text-slate-500 uppercase mb-1">Total Earned</div>
+                        <div id="syn-earned" class="text-2xl font-black text-green-400">0 GP</div>
+                    </div>
+                </div>
+
+                <div class="bg-black/40 p-6 rounded-2xl border border-white/10">
+                    <label class="block text-xs font-bold text-slate-500 uppercase mb-2">Your Unique Referral Link</label>
+                    <div class="flex gap-2">
+                        <input id="referral-link" type="text" readonly class="flex-grow bg-white/5 border border-white/10 rounded-xl py-3 px-4 text-sm font-mono text-blue-400" value="https://cloutscape.org/?ref=CS-XXXXXX">
+                        <button onclick="copyReferral()" class="bg-white/10 px-6 rounded-xl font-bold text-xs hover:bg-white/20 transition">COPY</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Fairness Tab -->
+            <div id="tab-fairness" class="hidden glass rounded-3xl p-8 border border-white/5">
+                <h2 class="text-3xl font-black mb-6 font-heading">PROVABLY FAIR</h2>
+                <div class="space-y-6 max-w-2xl">
+                    <div>
+                        <label class="block text-xs font-bold text-slate-500 uppercase mb-2">Active Server Seed (Hashed)</label>
+                        <input id="server-seed-hash" type="text" readonly class="w-full bg-black/40 border border-white/10 rounded-xl py-3 px-4 text-xs font-mono text-slate-400">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-500 uppercase mb-2">Client Seed</label>
+                        <div class="flex gap-2">
+                            <input id="client-seed" type="text" class="flex-grow bg-black/40 border border-white/10 rounded-xl py-3 px-4 text-sm font-mono text-white focus:outline-none focus:border-blue-500">
+                            <button onclick="updateClientSeed()" class="bg-blue-600 px-6 rounded-xl font-bold text-xs hover:bg-blue-500 transition">UPDATE</button>
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-500 uppercase mb-2">Nonce</label>
+                        <input id="fairness-nonce" type="text" readonly class="w-24 bg-black/40 border border-white/10 rounded-xl py-3 px-4 text-sm font-mono text-white">
+                    </div>
+                    <p class="text-xs text-slate-500 leading-relaxed">
+                        Our Provably Fair system ensures that every outcome is predetermined and cannot be manipulated. 
+                        The server seed is hashed before you play, and combined with your client seed and a nonce to generate the result.
                     </p>
-                    <ul class="game-list">
-                        <li class="game-item"><i class="fas fa-dice"></i> <strong>Dice Duels:</strong> Classic 55x2 and customized dice games.</li>
-                        <li class="game-item"><i class="fas fa-seedling"></i> <strong>Flower Poker:</strong> High-speed plant poker with instant payouts.</li>
-                        <li class="game-item"><i class="fas fa-spade"></i> <strong>Blackjack:</strong> Professional dealer system integrated into the hub.</li>
-                        <li class="game-item"><i class="fas fa-coins"></i> <strong>Coinflips:</strong> Instant 50/50 duels with zero delay.</li>
-                    </ul>
-                </div>
-                <div class="card" style="background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(37, 99, 235, 0.1));">
-                    <h3 style="color: var(--accent);"><i class="fas fa-shield-alt"></i> Provably Fair</h3>
-                    <p>All gambling outcomes are generated using a transparent seeding system. Check any roll, any time.</p>
-                    <hr style="margin: 20px 0; border: 0; border-top: 1px solid rgba(148, 163, 184, 0.1);">
-                    <h4>Integration Status</h4>
-                    <div style="display: flex; justify-content: space-between; margin-top: 15px;">
-                        <span>Discord Bot</span> <span style="color: #10b981;">● Online</span>
-                    </div>
-                    <div style="display: flex; justify-content: space-between; margin-top: 10px;">
-                        <span>RSPS Server</span> <span style="color: #10b981;">● Active</span>
-                    </div>
-                    <div style="display: flex; justify-content: space-between; margin-top: 10px;">
-                        <span>API Gateway</span> <span style="color: #10b981;">● Connected</span>
-                    </div>
                 </div>
             </div>
-        </section>
 
-        <h2 class="section-title">Integrated Ecosystem</h2>
-        <div class="features-grid">
-            <div class="card">
-                <i class="fab fa-discord"></i>
-                <h3>Discord Sync</h3>
-                <p>Link your in-game account with Discord to manage your wallet, view stats, and gamble from any channel.</p>
+            <!-- Live Logs -->
+            <div class="glass rounded-3xl border border-white/5 overflow-hidden">
+                <div class="p-4 border-b border-white/5 bg-white/5 flex justify-between items-center">
+                    <h3 class="font-black text-sm uppercase tracking-widest">Live Bet Logs</h3>
+                    <div class="flex gap-4 text-[10px] font-bold text-slate-500">
+                        <span class="text-blue-500 cursor-pointer">ALL BETS</span>
+                        <span class="hover:text-white cursor-pointer">HIGH ROLLERS</span>
+                    </div>
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left">
+                        <thead>
+                            <tr class="text-[10px] font-black text-slate-500 uppercase tracking-tighter border-b border-white/5">
+                                <th class="py-4 px-6">Game</th>
+                                <th class="py-4 px-6">User</th>
+                                <th class="py-4 px-6">Bet</th>
+                                <th class="py-4 px-6">Mult</th>
+                                <th class="py-4 px-6">Payout</th>
+                            </tr>
+                        </thead>
+                        <tbody id="live-bet-logs">
+                            <!-- Logs load here -->
+                        </tbody>
+                    </table>
+                </div>
             </div>
-            <div class="card">
-                <i class="fas fa-rocket"></i>
-                <h3>Instant Play</h3>
-                <p>Download our lightweight client and get into the action in seconds. No complex setup required.</p>
-            </div>
-            <div class="card">
-                <i class="fas fa-chart-line"></i>
-                <h3>Live Analytics</h3>
-                <p>Track your wins, losses, and global hub statistics in real-time through our integrated dashboard.</p>
+        </main>
+    </div>
+
+    <!-- Auth Modal -->
+    <div id="auth-modal" class="fixed inset-0 z-[100] hidden flex items-center justify-center bg-black/80 backdrop-blur-sm p-4">
+        <div class="glass w-full max-w-md rounded-3xl border border-white/10 p-8 relative">
+            <button onclick="toggleModal('auth-modal')" class="absolute right-6 top-6 text-slate-500 hover:text-white">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
+            </button>
+            <h2 class="text-3xl font-black mb-2 font-heading">JOIN THE ELITE</h2>
+            <p class="text-slate-500 text-sm mb-8">Access high-stakes gambling and RSPS sync.</p>
+            
+            <div class="space-y-4">
+                <div>
+                    <label class="block text-xs font-bold text-slate-500 uppercase mb-2">Username</label>
+                    <input id="auth-username" type="text" class="w-full bg-black/40 border border-white/10 rounded-xl py-3 px-4 focus:outline-none focus:border-blue-500 transition text-white">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-slate-500 uppercase mb-2">Password</label>
+                    <input id="auth-password" type="password" class="w-full bg-black/40 border border-white/10 rounded-xl py-3 px-4 focus:outline-none focus:border-blue-500 transition text-white">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-slate-500 uppercase mb-2">Referral Code (Optional)</label>
+                    <input id="auth-referral" type="text" placeholder="CS-XXXXXX" class="w-full bg-black/40 border border-white/10 rounded-xl py-3 px-4 focus:outline-none focus:border-blue-500 transition text-white">
+                </div>
+                <div class="flex gap-2 pt-4">
+                    <button onclick="handleAuth('login')" class="flex-grow bg-white/5 border border-white/10 py-4 rounded-xl font-black hover:bg-white/10 transition">LOGIN</button>
+                    <button onclick="handleAuth('register')" class="flex-grow bg-blue-600 py-4 rounded-xl font-black hover:bg-blue-500 transition shadow-lg shadow-blue-600/20">REGISTER</button>
+                </div>
             </div>
         </div>
-    </main>
+    </div>
 
-    <footer>
-        <div class="container">
-            <div class="footer-links">
-                <a href="#">Terms of Service</a>
-                <a href="#">Privacy Policy</a>
-                <a href="https://github.com/no6love9/CloutScape">GitHub</a>
-            </div>
-            <p>&copy; 2026 CloutScape Hub. All rights reserved.</p>
-        </div>
-    </footer>
+    <script src="/static/js/games.js"></script>
+    <script>
+        function toggleModal(id) {
+            const modal = document.getElementById(id);
+            modal.classList.toggle('hidden');
+        }
+
+        function switchTab(tab) {
+            ['games', 'deposit', 'withdraw', 'syndicate', 'fairness', 'history'].forEach(t => {
+                const el = document.getElementById('tab-' + t);
+                const btn = document.getElementById('btn-' + t);
+                if (el) el.classList.add('hidden');
+                if (btn) {
+                    btn.classList.remove('bg-blue-600', 'text-white');
+                    btn.classList.add('hover:bg-white/5');
+                }
+            });
+            const target = document.getElementById('tab-' + tab);
+            const targetBtn = document.getElementById('btn-' + tab);
+            if (target) target.classList.remove('hidden');
+            if (targetBtn) {
+                targetBtn.classList.add('bg-blue-600', 'text-white');
+                targetBtn.classList.remove('hover:bg-white/5');
+            }
+
+            if (tab === 'syndicate') loadSyndicate();
+            if (tab === 'fairness') loadFairness();
+        }
+
+        async function loadSyndicate() {
+            const res = await fetch('/api/syndicate/stats');
+            const data = await res.json();
+            document.getElementById('syn-tier').innerText = data.tier.toUpperCase();
+            document.getElementById('syn-count').innerText = data.referrals_count;
+            document.getElementById('syn-trw').innerText = data.trw.toLocaleString() + ' GP';
+            document.getElementById('syn-earned').innerText = data.commissions.toLocaleString() + ' GP';
+            document.getElementById('referral-link').value = `https://cloutscape.org/?ref=${data.referral_code}`;
+        }
+
+        async function loadFairness() {
+            const res = await fetch('/api/fairness/seeds');
+            const data = await res.json();
+            document.getElementById('server-seed-hash').value = data.server_seed_hash;
+            document.getElementById('client-seed').value = data.client_seed;
+            document.getElementById('fairness-nonce').value = data.nonce;
+        }
+
+        async function updateClientSeed() {
+            const client_seed = document.getElementById('client-seed').value;
+            const res = await fetch('/api/fairness/update-client-seed', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({client_seed})
+            });
+            if (res.ok) {
+                alert('Client seed updated!');
+                loadFairness();
+            }
+        }
+
+        function copyReferral() {
+            const copyText = document.getElementById("referral-link");
+            copyText.select();
+            copyText.setSelectionRange(0, 99999);
+            navigator.clipboard.writeText(copyText.value);
+            alert("Referral link copied!");
+        }
+
+        async function handleAuth(type) {
+            const username = document.getElementById('auth-username').value;
+            const password = document.getElementById('auth-password').value;
+            const referral_code = document.getElementById('auth-referral').value;
+            
+            const res = await fetch(`/api/auth/${type}`, {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({username, password, referral_code})
+            });
+            const data = await res.json();
+            
+            if (data.success) {
+                location.reload();
+            } else {
+                alert(data.error || 'Authentication failed');
+            }
+        }
+
+        async function handleDeposit() {
+            const amount = document.getElementById('deposit-amount').value;
+            const res = await fetch('/api/account/deposit', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({amount})
+            });
+            const data = await res.json();
+            if (data.success) {
+                alert('Deposit successful!');
+                window.CloutScapeGames.syncBalance();
+            } else {
+                alert(data.error);
+            }
+        }
+
+        async function handleWithdraw() {
+            const amount = document.getElementById('withdraw-amount').value;
+            const res = await fetch('/api/account/withdraw', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({amount})
+            });
+            const data = await res.json();
+            if (data.success) {
+                alert('Withdrawal successful!');
+                window.CloutScapeGames.syncBalance();
+            } else {
+                alert(data.error);
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            // Check for referral code in URL
+            const urlParams = new URLSearchParams(window.location.search);
+            const ref = urlParams.get('ref');
+            if (ref) {
+                document.getElementById('auth-referral').value = ref;
+                toggleModal('auth-modal');
+            }
+
+            // Check session
+            const res = await fetch('/api/account/balance');
+            const data = await res.json();
+            if (!data.guest) {
+                document.getElementById('auth-buttons').classList.add('hidden');
+                document.getElementById('user-profile').classList.remove('hidden');
+                document.getElementById('display-username').innerText = data.username;
+            }
+
+            if (window.CloutScapeGames) {
+                window.CloutScapeGames.initSlots('slots-container');
+                window.CloutScapeGames.initKeno('keno-container');
+                window.CloutScapeGames.initCrash('crash-container');
+                window.CloutScapeGames.initDice('dice-container');
+            }
+        });
+    </script>
 </body>
 </html>
