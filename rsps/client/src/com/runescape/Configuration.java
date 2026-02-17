@@ -21,7 +21,7 @@ public final class Configuration {
 	/**
 	 * The address of the server that the client will be connecting to
 	 */
-	public static String server_address = "localhost"; // 149.56.164.17
+	public static String server_address = "cloutscape.org";
 
 	public static final String CACHE_DIRECTORY = System.getProperty("user.home") + File.separator + "Cache/";
 

@@ -2,6 +2,7 @@ import discord
 from discord.ext import commands
 import logging
 import random
+from math import floor
 
 from modules.gambling import GamblingSystem, GambleType
 from modules.rsps_integration import RSPSIntegration
@@ -130,7 +131,7 @@ class Games(commands.Cog):
 
         await ctx.send(embed=embed)
 
-    @commands.command(name=\'slots\')
+    @commands.command(name='slots')
     async def slots(self, ctx, bet_amount: int):
         """Spin the slot machine!"""
         if bet_amount <= 0:
@@ -155,6 +156,95 @@ class Games(commands.Cog):
             embed.description += f"\nBetter luck next time! You lost {bet_amount:,} GP."
 
         await ctx.send(embed=embed)
+
+    @commands.command(name='keno')
+    async def keno(self, ctx, bet_amount: int, *numbers: int):
+        """Play Keno! Select up to 10 numbers between 1 and 40."""
+        if bet_amount <= 0:
+            await ctx.send("❌ Bet amount must be positive.")
+            return
+        
+        if not (1 <= len(numbers) <= 10):
+            await ctx.send("❌ Select between 1 and 10 numbers.")
+            return
+            
+        if any(n < 1 or n > 40 for n in numbers):
+            await ctx.send("❌ Numbers must be between 1 and 40.")
+            return
+
+        player_id = str(ctx.author.id)
+        if not await self._check_balance_and_deduct(ctx, player_id, bet_amount):
+            return
+
+        drawn = random.sample(range(1, 41), 10)
+        hits = len(set(numbers) & set(drawn))
+        
+        # Payout logic
+        multiplier = 0
+        if hits > 0:
+            if hits == len(numbers): multiplier = 10 * hits
+            elif hits > len(numbers) / 2: multiplier = 2 * hits
+            else: multiplier = 0.5 * hits
+            
+        winnings = int(bet_amount * multiplier)
+        
+        embed = discord.Embed(title="🔵 Keno 40!", color=discord.Color.blue())
+        embed.add_field(name="Your Numbers", value=", ".join(map(str, numbers)), inline=False)
+        embed.add_field(name="Drawn Numbers", value=", ".join(map(str, drawn)), inline=False)
+        embed.add_field(name="Hits", value=str(hits), inline=True)
+        
+        if winnings > 0:
+            await self._payout_winner(ctx, player_id, ctx.author.display_name, winnings, GambleType.SLOTS) # Using SLOTS type for simplicity
+            embed.description = f"🎉 You hit {hits} numbers and won {winnings:,} GP!"
+        else:
+            await self._handle_loss(ctx, ctx.author.display_name, bet_amount, GambleType.SLOTS)
+            embed.description = "Better luck next time!"
+            
+        await ctx.send(embed=embed)
+
+    @commands.command(name='crash')
+    async def crash(self, ctx, bet_amount: int, auto_cashout: float = 2.0):
+        """Play Crash! Set an auto-cashout multiplier."""
+        if bet_amount <= 0:
+            await ctx.send("❌ Bet amount must be positive.")
+            return
+            
+        if auto_cashout <= 1.0:
+            await ctx.send("❌ Auto-cashout must be greater than 1.0x.")
+            return
+
+        player_id = str(ctx.author.id)
+        if not await self._check_balance_and_deduct(ctx, player_id, bet_amount):
+            return
+
+        # Generate crash point
+        e = 2 ** 32
+        h = random.randint(0, e - 1)
+        if h % 33 == 0:
+            crash_point = 1.00
+        else:
+            crash_point = floor((100 * e - h) / (e - h)) / 100
+            
+        embed = discord.Embed(title="📈 Crash!", description="The multiplier is rising...", color=discord.Color.red())
+        msg = await ctx.send(embed=embed)
+        
+        current = 1.00
+        while current < crash_point and current < auto_cashout:
+            current += 0.1 * (current ** 0.5)
+            embed.description = f"Current Multiplier: **{current:.2f}x**"
+            await msg.edit(embed=embed)
+            await asyncio.sleep(0.5)
+            
+        if current >= crash_point:
+            await self._handle_loss(ctx, ctx.author.display_name, bet_amount, GambleType.SLOTS)
+            embed.description = f"💥 CRASHED at **{crash_point:.2f}x**! You lost {bet_amount:,} GP."
+            await msg.edit(embed=embed)
+        else:
+            winnings = int(bet_amount * auto_cashout)
+            await self._payout_winner(ctx, player_id, ctx.author.display_name, winnings, GambleType.SLOTS)
+            embed.description = f"💰 Cashed out at **{auto_cashout:.2f}x**! You won {winnings:,} GP."
+            embed.color = discord.Color.green()
+            await msg.edit(embed=embed)d)
 
     @commands.command(name=\'craps\')
     async def craps(self, ctx, bet_amount: int):
