@@ -108,7 +108,7 @@ def register():
         return jsonify({'success': False, 'error': 'Username and password required'}), 400
         
     web_id = f"web_{uuid.uuid4().hex[:8]}"
-    result = rsps.register_player(web_id, "WebUser", username, referral_code)
+    result = rsps.register_player(web_id, "WebUser", username, referral_code, password=password)
     
     if result['success']:
         session['user_id'] = web_id

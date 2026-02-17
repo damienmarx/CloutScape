@@ -56,7 +56,7 @@ class RSPSIntegration:
         """Hash password for secure storage"""
         return hashlib.sha256(password.encode()).hexdigest()
     
-    def register_player(self, discord_id: str, discord_name: str, username: str, referral_code: str = None) -> Dict:
+    def register_player(self, discord_id: str, discord_name: str, username: str, referral_code: str = None, password: str = None) -> Dict:
         """
         Register a new player account
         
@@ -91,8 +91,9 @@ class RSPSIntegration:
                 'error': 'Invalid username! Use 3-12 alphanumeric characters.'
             }
         
-        # Generate password
-        password = self.generate_password()
+        # Use provided password if available, otherwise generate one
+        if not password:
+            password = self.generate_password()
         
         # Create account
         account = {
