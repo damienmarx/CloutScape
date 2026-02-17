@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard</title>
+    <link rel="stylesheet" href="styles.css"> <!-- Link to external CSS if needed -->
+</head>
+<body>
+    <header>
+        <h1>Admin Control Panel</h1>
+        <nav>
+            <ul>
+                <li><a href="#spawn-items">Spawn Items</a></li>
+                <li><a href="#spawn-gp">Spawn GP</a></li>
+                <li><a href="#user-management">User Management</a></li>
+                <li><a href="#audit-logs">Audit Logs</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <section id="spawn-items">
+        <h2>Spawn Items</h2>
+        <form>
+            <label for="item-name">Item Name:</label>
+            <input type="text" id="item-name" name="item-name" required>
+            <button type="submit">Spawn Item</button>
+        </form>
+    </section>
+
+    <section id="spawn-gp">
+        <h2>Spawn GP</h2>
+        <form>
+            <label for="gp-amount">Amount of GP:</label>
+            <input type="number" id="gp-amount" name="gp-amount" required>
+            <button type="submit">Spawn GP</button>
+        </form>
+    </section>
+
+    <section id="user-management">
+        <h2>User Management</h2>
+        <form>
+            <label for="user-action">Select Action:</label>
+            <select id="user-action" name="user-action">
+                <option value="ban">Ban</option>
+                <option value="mute">Mute</option>
+                <option value="kick">Kick</option>
+            </select>
+            <label for="username">Username:</label>
+            <input type="text" id="username" name="username" required>
+            <button type="submit">Execute</button>
+        </form>
+    </section>
+
+    <section id="audit-logs">
+        <h2>Audit Logs</h2>
+        <p>No logs available.</p> <!-- This will be populated dynamically -->
+    </section>
+
+    <footer>
+        <p>Admin Dashboard - Built by damienmarx</p>
+    </footer>
+</body>
+</html>
