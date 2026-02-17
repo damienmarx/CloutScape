@@ -127,7 +127,8 @@
                 <button onclick="switchTab('games')" id="btn-games" class="flex-grow py-3 rounded-2xl font-bold text-sm transition bg-blue-600 text-white">GAMES</button>
                 <button onclick="switchTab('deposit')" id="btn-deposit" class="flex-grow py-3 rounded-2xl font-bold text-sm transition hover:bg-white/5">DEPOSIT</button>
                 <button onclick="switchTab('withdraw')" id="btn-withdraw" class="flex-grow py-3 rounded-2xl font-bold text-sm transition hover:bg-white/5">WITHDRAW</button>
-                <button onclick="switchTab('history')" id="btn-history" class="flex-grow py-3 rounded-2xl font-bold text-sm transition hover:bg-white/5">HISTORY</button>
+                <button onclick="switchTab('syndicate')" id="btn-syndicate" class="flex-grow py-3 rounded-2xl font-bold text-sm transition hover:bg-white/5">SYNDICATE</button>
+                <button onclick="switchTab('fairness')" id="btn-fairness" class="flex-grow py-3 rounded-2xl font-bold text-sm transition hover:bg-white/5">FAIRNESS</button>
             </div>
 
             <!-- Games Grid -->
@@ -180,6 +181,69 @@
                 </div>
             </div>
 
+            <!-- Syndicate Tab -->
+            <div id="tab-syndicate" class="hidden glass rounded-3xl p-8 border border-white/5">
+                <div class="flex justify-between items-start mb-8">
+                    <div>
+                        <h2 class="text-3xl font-black mb-2 font-heading">THE SYNDICATE</h2>
+                        <p class="text-slate-500">Build your empire and earn passive GP.</p>
+                    </div>
+                    <div class="bg-blue-600/20 border border-blue-500/50 px-6 py-3 rounded-2xl">
+                        <div class="text-[10px] font-bold text-blue-400 uppercase">Your Tier</div>
+                        <div id="syn-tier" class="text-xl font-black text-white">RECRUIT</div>
+                    </div>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                    <div class="bg-white/5 p-6 rounded-2xl border border-white/5">
+                        <div class="text-xs font-bold text-slate-500 uppercase mb-1">Total Referrals</div>
+                        <div id="syn-count" class="text-2xl font-black text-white">0</div>
+                    </div>
+                    <div class="bg-white/5 p-6 rounded-2xl border border-white/5">
+                        <div class="text-xs font-bold text-slate-500 uppercase mb-1">Referred Wager</div>
+                        <div id="syn-trw" class="text-2xl font-black text-white">0 GP</div>
+                    </div>
+                    <div class="bg-white/5 p-6 rounded-2xl border border-white/5">
+                        <div class="text-xs font-bold text-slate-500 uppercase mb-1">Total Earned</div>
+                        <div id="syn-earned" class="text-2xl font-black text-green-400">0 GP</div>
+                    </div>
+                </div>
+
+                <div class="bg-black/40 p-6 rounded-2xl border border-white/10">
+                    <label class="block text-xs font-bold text-slate-500 uppercase mb-2">Your Unique Referral Link</label>
+                    <div class="flex gap-2">
+                        <input id="referral-link" type="text" readonly class="flex-grow bg-white/5 border border-white/10 rounded-xl py-3 px-4 text-sm font-mono text-blue-400" value="https://cloutscape.org/?ref=CS-XXXXXX">
+                        <button onclick="copyReferral()" class="bg-white/10 px-6 rounded-xl font-bold text-xs hover:bg-white/20 transition">COPY</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Fairness Tab -->
+            <div id="tab-fairness" class="hidden glass rounded-3xl p-8 border border-white/5">
+                <h2 class="text-3xl font-black mb-6 font-heading">PROVABLY FAIR</h2>
+                <div class="space-y-6 max-w-2xl">
+                    <div>
+                        <label class="block text-xs font-bold text-slate-500 uppercase mb-2">Active Server Seed (Hashed)</label>
+                        <input id="server-seed-hash" type="text" readonly class="w-full bg-black/40 border border-white/10 rounded-xl py-3 px-4 text-xs font-mono text-slate-400">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-500 uppercase mb-2">Client Seed</label>
+                        <div class="flex gap-2">
+                            <input id="client-seed" type="text" class="flex-grow bg-black/40 border border-white/10 rounded-xl py-3 px-4 text-sm font-mono text-white focus:outline-none focus:border-blue-500">
+                            <button onclick="updateClientSeed()" class="bg-blue-600 px-6 rounded-xl font-bold text-xs hover:bg-blue-500 transition">UPDATE</button>
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-500 uppercase mb-2">Nonce</label>
+                        <input id="fairness-nonce" type="text" readonly class="w-24 bg-black/40 border border-white/10 rounded-xl py-3 px-4 text-sm font-mono text-white">
+                    </div>
+                    <p class="text-xs text-slate-500 leading-relaxed">
+                        Our Provably Fair system ensures that every outcome is predetermined and cannot be manipulated. 
+                        The server seed is hashed before you play, and combined with your client seed and a nonce to generate the result.
+                    </p>
+                </div>
+            </div>
+
             <!-- Live Logs -->
             <div class="glass rounded-3xl border border-white/5 overflow-hidden">
                 <div class="p-4 border-b border-white/5 bg-white/5 flex justify-between items-center">
@@ -227,6 +291,10 @@
                     <label class="block text-xs font-bold text-slate-500 uppercase mb-2">Password</label>
                     <input id="auth-password" type="password" class="w-full bg-black/40 border border-white/10 rounded-xl py-3 px-4 focus:outline-none focus:border-blue-500 transition text-white">
                 </div>
+                <div>
+                    <label class="block text-xs font-bold text-slate-500 uppercase mb-2">Referral Code (Optional)</label>
+                    <input id="auth-referral" type="text" placeholder="CS-XXXXXX" class="w-full bg-black/40 border border-white/10 rounded-xl py-3 px-4 focus:outline-none focus:border-blue-500 transition text-white">
+                </div>
                 <div class="flex gap-2 pt-4">
                     <button onclick="handleAuth('login')" class="flex-grow bg-white/5 border border-white/10 py-4 rounded-xl font-black hover:bg-white/10 transition">LOGIN</button>
                     <button onclick="handleAuth('register')" class="flex-grow bg-blue-600 py-4 rounded-xl font-black hover:bg-blue-500 transition shadow-lg shadow-blue-600/20">REGISTER</button>
@@ -243,7 +311,7 @@
         }
 
         function switchTab(tab) {
-            ['games', 'deposit', 'withdraw', 'history'].forEach(t => {
+            ['games', 'deposit', 'withdraw', 'syndicate', 'fairness', 'history'].forEach(t => {
                 const el = document.getElementById('tab-' + t);
                 const btn = document.getElementById('btn-' + t);
                 if (el) el.classList.add('hidden');
@@ -259,16 +327,59 @@
                 targetBtn.classList.add('bg-blue-600', 'text-white');
                 targetBtn.classList.remove('hover:bg-white/5');
             }
+
+            if (tab === 'syndicate') loadSyndicate();
+            if (tab === 'fairness') loadFairness();
+        }
+
+        async function loadSyndicate() {
+            const res = await fetch('/api/syndicate/stats');
+            const data = await res.json();
+            document.getElementById('syn-tier').innerText = data.tier.toUpperCase();
+            document.getElementById('syn-count').innerText = data.referrals_count;
+            document.getElementById('syn-trw').innerText = data.trw.toLocaleString() + ' GP';
+            document.getElementById('syn-earned').innerText = data.commissions.toLocaleString() + ' GP';
+            document.getElementById('referral-link').value = `https://cloutscape.org/?ref=${data.referral_code}`;
+        }
+
+        async function loadFairness() {
+            const res = await fetch('/api/fairness/seeds');
+            const data = await res.json();
+            document.getElementById('server-seed-hash').value = data.server_seed_hash;
+            document.getElementById('client-seed').value = data.client_seed;
+            document.getElementById('fairness-nonce').value = data.nonce;
+        }
+
+        async function updateClientSeed() {
+            const client_seed = document.getElementById('client-seed').value;
+            const res = await fetch('/api/fairness/update-client-seed', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({client_seed})
+            });
+            if (res.ok) {
+                alert('Client seed updated!');
+                loadFairness();
+            }
+        }
+
+        function copyReferral() {
+            const copyText = document.getElementById("referral-link");
+            copyText.select();
+            copyText.setSelectionRange(0, 99999);
+            navigator.clipboard.writeText(copyText.value);
+            alert("Referral link copied!");
         }
 
         async function handleAuth(type) {
             const username = document.getElementById('auth-username').value;
             const password = document.getElementById('auth-password').value;
+            const referral_code = document.getElementById('auth-referral').value;
             
             const res = await fetch(`/api/auth/${type}`, {
                 method: 'POST',
                 headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify({username, password})
+                body: JSON.stringify({username, password, referral_code})
             });
             const data = await res.json();
             
@@ -312,6 +423,14 @@
         }
 
         document.addEventListener('DOMContentLoaded', async () => {
+            // Check for referral code in URL
+            const urlParams = new URLSearchParams(window.location.search);
+            const ref = urlParams.get('ref');
+            if (ref) {
+                document.getElementById('auth-referral').value = ref;
+                toggleModal('auth-modal');
+            }
+
             // Check session
             const res = await fetch('/api/account/balance');
             const data = await res.json();

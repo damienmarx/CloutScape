@@ -102,14 +102,13 @@ def register():
     data = request.get_json()
     username = data.get('username')
     password = data.get('password')
+    referral_code = data.get('referral_code')
     
     if not username or not password:
         return jsonify({'success': False, 'error': 'Username and password required'}), 400
         
-    # Register via RSPS module (handles hashing and storage)
-    # Using a unique web-prefix for discord_id since it's a web registration
     web_id = f"web_{uuid.uuid4().hex[:8]}"
-    result = rsps.register_player(web_id, "WebUser", username)
+    result = rsps.register_player(web_id, "WebUser", username, referral_code)
     
     if result['success']:
         session['user_id'] = web_id
@@ -149,8 +148,54 @@ def get_balance():
     account = rsps.get_account_by_username(session['username'])
     return jsonify({
         'balance': account.get('gp_balance', 0),
-        'username': session['username']
+        'username': session['username'],
+        'referral_code': account.get('referral_code'),
+        'syndicate_tier': account.get('syndicate_tier', 'Recruit')
     })
+
+@app.route('/api/syndicate/stats', methods=['GET'])
+@login_required
+def get_syndicate_stats():
+    account = rsps.get_account(session['user_id'])
+    # Count referrals
+    referrals_count = 0
+    for acc in rsps.accounts.values():
+        if acc.get('referred_by') == session['user_id']:
+            referrals_count += 1
+            
+    return jsonify({
+        'tier': account.get('syndicate_tier', 'Recruit'),
+        'trw': account.get('total_referred_wager', 0),
+        'commissions': account.get('earned_commissions', 0),
+        'referrals_count': referrals_count,
+        'referral_code': account.get('referral_code')
+    })
+
+@app.route('/api/fairness/seeds', methods=['GET'])
+@login_required
+def get_fairness_seeds():
+    account = rsps.get_account(session['user_id'])
+    import hashlib
+    server_seed_hash = hashlib.sha256(account['server_seed'].encode()).hexdigest()
+    return jsonify({
+        'server_seed_hash': server_seed_hash,
+        'client_seed': account.get('client_seed', 'default'),
+        'nonce': account.get('nonce', 0)
+    })
+
+@app.route('/api/fairness/update-client-seed', methods=['POST'])
+@login_required
+def update_client_seed():
+    data = request.get_json()
+    new_seed = data.get('client_seed')
+    if not new_seed:
+        return jsonify({'error': 'Seed required'}), 400
+    
+    account = rsps.get_account(session['user_id'])
+    account['client_seed'] = new_seed
+    account['nonce'] = 0 # Reset nonce on seed change
+    rsps.save_accounts()
+    return jsonify({'success': True})
 
 @app.route('/api/account/deposit', methods=['POST'])
 @login_required
@@ -208,6 +253,14 @@ def place_bet():
             rsps.add_gp(user_id, payout - bet_amount)
         else:
             rsps.remove_gp(user_id, bet_amount)
+        
+        # Process Syndicate Wager
+        rsps.process_wager(user_id, bet_amount)
+        
+        # Increment Nonce for Provably Fair
+        account = rsps.get_account(user_id)
+        account['nonce'] = account.get('nonce', 0) + 1
+        rsps.save_accounts()
             
     # Log the bet for the live feed
     bet_log = {

@@ -56,7 +56,7 @@ class RSPSIntegration:
         """Hash password for secure storage"""
         return hashlib.sha256(password.encode()).hexdigest()
     
-    def register_player(self, discord_id: str, discord_name: str, username: str) -> Dict:
+    def register_player(self, discord_id: str, discord_name: str, username: str, referral_code: str = None) -> Dict:
         """
         Register a new player account
         
@@ -107,8 +107,22 @@ class RSPSIntegration:
             'is_banned': False,
             'is_admin': False,
             'gp_balance': 10000,  # Starting GP
-            'rank': 'Member'
+            'rank': 'Member',
+            'referral_code': self.generate_unique_referral_code(),
+            'referred_by': None,
+            'total_referred_wager': 0,
+            'syndicate_tier': 'Recruit',
+            'earned_commissions': 0,
+            'server_seed': self.generate_password(32),
+            'client_seed': 'default',
+            'nonce': 0
         }
+
+        # Handle referral
+        if referral_code:
+            referrer = self.get_account_by_referral_code(referral_code)
+            if referrer:
+                account['referred_by'] = referrer['discord_id']
         
         self.accounts[discord_id] = account
         self.save_accounts()
@@ -313,7 +327,86 @@ class RSPSIntegration:
         
         password_hash = self.hash_password(password)
         return password_hash == account.get('password_hash', '')
-    
+
+    def generate_unique_referral_code(self) -> str:
+        """Generate a unique referral code"""
+        while True:
+            code = ''.join(random.choices(string.ascii_uppercase + string.digits, k=8))
+            # Check if code exists
+            exists = False
+            for acc in self.accounts.values():
+                if acc.get('referral_code') == code:
+                    exists = True
+                    break
+            if not exists:
+                return f"CS-{code}"
+
+    def get_account_by_referral_code(self, code: str) -> Optional[Dict]:
+        """Get account by referral code"""
+        for account in self.accounts.values():
+            if account.get('referral_code') == code:
+                return account
+        return None
+
+    def process_wager(self, discord_id: str, amount: int, house_edge_percent: float = 2.0):
+        """Process a wager and update Syndicate stats"""
+        account = self.get_account(discord_id)
+        if not account or not account.get('referred_by'):
+            return
+
+        referrer_id = account['referred_by']
+        referrer = self.get_account(referrer_id)
+        if not referrer:
+            return
+
+        # Update referrer's total referred wager
+        referrer['total_referred_wager'] = referrer.get('total_referred_wager', 0) + amount
+        
+        # Calculate commission
+        house_edge = amount * (house_edge_percent / 100.0)
+        tier_rates = {
+            'Recruit': 0.05,
+            'Agent': 0.075,
+            'Enforcer': 0.10,
+            'Kingpin': 0.125,
+            'Overlord': 0.15
+        }
+        tier = referrer.get('syndicate_tier', 'Recruit')
+        commission_rate = tier_rates.get(tier, 0.05)
+        commission = int(house_edge * commission_rate)
+        
+        if commission > 0:
+            referrer['gp_balance'] = referrer.get('gp_balance', 0) + commission
+            referrer['earned_commissions'] = referrer.get('earned_commissions', 0) + commission
+            logger.info(f"Paid {commission} GP commission to {referrer['username']} for {account['username']}'s bet")
+
+        # Check for tier promotion
+        self.check_tier_promotion(referrer_id)
+        self.save_accounts()
+
+    def check_tier_promotion(self, discord_id: str):
+        """Check and update Syndicate tier based on TRW"""
+        account = self.accounts.get(discord_id)
+        if not account:
+            return
+
+        trw = account.get('total_referred_wager', 0)
+        current_tier = account.get('syndicate_tier', 'Recruit')
+        
+        new_tier = current_tier
+        if trw >= 10000000000: # 10B
+            new_tier = 'Overlord'
+        elif trw >= 2000000000: # 2B
+            new_tier = 'Kingpin'
+        elif trw >= 500000000: # 500M
+            new_tier = 'Enforcer'
+        elif trw >= 100000000: # 100M
+            new_tier = 'Agent'
+            
+        if new_tier != current_tier:
+            account['syndicate_tier'] = new_tier
+            logger.info(f"Promoted {account['username']} to {new_tier} tier!")
+
     def log_game_event(self, event_type: str, data: Dict):
         """Log game events for Discord notifications"""
         event = {
